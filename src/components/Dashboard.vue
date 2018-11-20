@@ -2,26 +2,25 @@
   <div>
 
 
-
-
     <media :query="{minWidth: 801}">
       <mdc-card class="bigger-card">
         <mdc-layout-grid style="width: 100%;">
           <mdc-layout-cell class="cell1" :span="6">
             <table class="sum-table">
               <thead><tr><td></td><td></td></tr></thead>
-              <tr><td>Running</td><td>3d</td></tr>
-              <tr><td>Trackers</td><td>3</td></tr>
-              <tr><td>Files</td><td>113001</td></tr>
-              <tr><td>Network I/O IN</td><td>34GB</td></tr>
-              <tr><td>Network I/O OUT</td><td>56GB</td></tr>
-              <tr><td>Download</td><td>25010</td></tr>
-              <tr><td>Upload</td><td>25010</td></tr>
+              <tr><td>Up</td><td>{{upTime}}</td></tr>
+              <tr><td>Tracker</td><td>{{trackerCount}}</td></tr>
+              <tr><td>Storage</td><td>{{storageCount}}</td></tr>
+              <tr><td>Files</td><td>{{fileCount}}</td></tr>
+              <tr><td>Network I/O IN</td><td>{{networkIOin}}</td></tr>
+              <tr><td>Network I/O OUT</td><td>{{networkIOout}}</td></tr>
+              <tr><td>Download</td><td>{{downloadCount}}</td></tr>
+              <tr><td>Upload</td><td>{{uploadCount}}</td></tr>
             </table>
           </mdc-layout-cell>
           <mdc-layout-cell class="cell2" :span="6">
-            <v-chart :options="data1" class="echarts"/>
-            <v-chart :options="data2" class="echarts"/>
+            <v-chart :options="networkIOTraffic" class="echarts"/>
+            <v-chart :options="downloadAndUpload" class="echarts"/>
           </mdc-layout-cell>
         </mdc-layout-grid>
       </mdc-card>
@@ -38,13 +37,14 @@
             <mdc-layout-cell class="cell1" :span="12">
               <table class="sum-table">
                 <thead><tr><td></td><td></td></tr></thead>
-                <tr><td>Running</td><td>3d</td></tr>
-                <tr><td>Trackers</td><td>3</td></tr>
-                <tr><td>Files</td><td>113001</td></tr>
-                <tr><td>Network I/O IN</td><td>34GB</td></tr>
-                <tr><td>Network I/O OUT</td><td>56GB</td></tr>
-                <tr><td>Download</td><td>25010</td></tr>
-                <tr><td>Upload</td><td>25010</td></tr>
+                <tr><td>Up</td><td>{{upTime}}</td></tr>
+                <tr><td>Tracker</td><td>{{trackerCount}}</td></tr>
+                <tr><td>Storage</td><td>{{storageCount}}</td></tr>
+                <tr><td>Files</td><td>{{fileCount}}</td></tr>
+                <tr><td>Network I/O IN</td><td>{{networkIOin}}</td></tr>
+                <tr><td>Network I/O OUT</td><td>{{networkIOout}}</td></tr>
+                <tr><td>Download</td><td>{{downloadCount}}</td></tr>
+                <tr><td>Upload</td><td>{{uploadCount}}</td></tr>
               </table>
             </mdc-layout-cell>
           </mdc-layout-grid>
@@ -54,8 +54,8 @@
         <mdc-card class="smaller-card">
           <mdc-layout-grid style="width: 100%;">
             <mdc-layout-cell class="cell2" :span="12">
-              <v-chart :options="data1" class="echarts"/>
-              <v-chart :options="data2" class="echarts"/>
+              <v-chart :options="networkIOTraffic" class="echarts"/>
+              <v-chart :options="downloadAndUpload" class="echarts"/>
             </mdc-layout-cell>
           </mdc-layout-grid>
         </mdc-card>
@@ -63,14 +63,13 @@
 
     </media>
 
-
-
   </div>
 </template>
 
 <script>
   import Media from 'vue-media'
   import ECharts from 'vue-echarts'
+  import axios from 'axios'
 
   export default {
     name: 'Dashboard',
@@ -78,9 +77,25 @@
       'media': Media,
       'v-chart': ECharts,
     },
+
+    mounted: function() {
+      window.setInterval(this.refresh(), 1000)
+    },
+
     data () {
       return {
-        data1: {
+
+        upTime: '-',
+        trackerCount: 0,
+        storageCount: 0,
+        fileCount: 0,
+        networkIOin: '-',
+        networkIOout: '-',
+        downloadCount: 0,
+        uploadCount: 0,
+
+
+        networkIOTraffic: {
           title : {
             text: 'Network traffic I/O',
             subtext: 'Beta',
@@ -125,14 +140,13 @@
               radius : '55%',
               center: ['50%', '60%'],
               data:[
-                {value:335, name:'Traffic IN'},
-                {value:310, name:'Traffic OUT'},
+
               ]
             }
           ]
         },
 
-        data2: {
+        downloadAndUpload: {
           title : {
             text: 'Download/Upload',
             subtext: 'Beta',
@@ -177,13 +191,60 @@
               radius : '55%',
               center: ['50%', '60%'],
               data:[
-                {value:335, name:'Download'},
-                {value:310, name:'Upload'},
+
               ]
             }
           ]
         },
 
+      }
+    },
+
+    methods: {
+      refresh(){
+        let that = this
+        axios.get("/dashboard/index", {})
+          .then(function (response) {
+            console.log(response)
+
+            that.upTime = response.data.result.up_time
+            that.trackerCount = response.data.result.tracker
+            that.storageCount = response.data.result.storage
+            that.networkIOin = response.data.result.ioin
+            that.networkIOout = response.data.result.ioout
+            that.downloadCount = response.data.result.downloads
+            that.uploadCount = response.data.result.uploads
+            that.fileCount = response.data.result.files
+
+
+            that.networkIOTraffic.series = [{
+              name:'Network I/O Traffic',
+              type:'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[{value:response.data.result.ioin, name:'Traffic IN'}, {value:response.data.result.ioout, name:'Traffic OUT'}]}]
+            that.networkIOTraffic.legend = {
+              orient : 'vertical',
+              x : 'left',
+              y: '60',
+              data:['Traffic IN','Traffic OUT']
+            }
+            that.downloadAndUpload.series = [{
+              name:'Download/Upload',
+              type:'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[{value:response.data.result.downloads, name:'Download'}, {value:response.data.result.uploads, name:'Upload'}]}]
+            that.downloadAndUpload.legend = {
+              orient : 'vertical',
+              x : 'left',
+              y: '60',
+              data:['Download','Upload']
+            }
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       }
     }
   }
@@ -205,7 +266,9 @@
   .sum-table td {
     text-align: left;
     line-height: 50px;
-    border-bottom: 1px dashed #000;
+    font-size: 13px;
+    font-weight: bold;
+    border-bottom: 1px dashed #e8e8e8;
   }
 
   .cell1 {
