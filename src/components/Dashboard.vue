@@ -79,7 +79,8 @@
     },
 
     mounted: function() {
-      window.setInterval(this.refresh(), 1000)
+      this.refresh()
+      window.setInterval(this.refresh, 10000)
     },
 
     data () {
