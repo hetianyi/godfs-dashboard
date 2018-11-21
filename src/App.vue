@@ -11,10 +11,11 @@
       </mdc-toolbar>
       <mdc-drawer :temporary="true" slot="drawer" toggle-on="toggle-drawer">
         <mdc-drawer-list>
-          <mdc-drawer-item start-icon="account_balance" to="/">Home</mdc-drawer-item>
+          <mdc-drawer-item start-icon="dashboard" to="/">Dashboard</mdc-drawer-item>
+          <mdc-drawer-item start-icon="settings_input_component" to="/Management">Management</mdc-drawer-item>
           <mdc-drawer-item start-icon="settings">Settings</mdc-drawer-item>
-          <mdc-drawer-item start-icon="help">Help</mdc-drawer-item>
-          <mdc-drawer-item start-icon="favorite">Star</mdc-drawer-item>
+          <mdc-drawer-item start-icon="help" @click="gotoGithub">Help</mdc-drawer-item>
+          <mdc-drawer-item start-icon="favorite" @click="gotoGithub">Star</mdc-drawer-item>
         </mdc-drawer-list>
       </mdc-drawer>
       <main class="content" >
@@ -26,7 +27,13 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+
+  methods: {
+    gotoGithub() {
+      window.open('https://github.com/hetianyi/godfs-dashboard')
+    }
+  }
 }
 
 </script>
