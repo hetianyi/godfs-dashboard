@@ -7,7 +7,7 @@
         <mdc-layout-grid style="width: 100%;">
           <mdc-layout-cell class="cell1" :span="6">
             <table class="sum-table">
-              <thead><tr><td></td><td></td></tr></thead>
+              <thead><tr><td width="50%"></td><td></td></tr></thead>
               <tr><td>Up</td><td>{{upTime}}</td></tr>
               <tr><td>Tracker</td><td>{{trackerCount}}</td></tr>
               <tr><td>Storage</td><td>{{storageCount}}</td></tr>
@@ -36,7 +36,7 @@
           <mdc-layout-grid style="width: 100%;">
             <mdc-layout-cell class="cell1" :span="12">
               <table class="sum-table">
-                <thead><tr><td></td><td></td></tr></thead>
+                <thead><tr><td width="50%"></td><td></td></tr></thead>
                 <tr><td>Up</td><td>{{upTime}}</td></tr>
                 <tr><td>Tracker</td><td>{{trackerCount}}</td></tr>
                 <tr><td>Storage</td><td>{{storageCount}}</td></tr>
@@ -204,7 +204,7 @@
     methods: {
       refresh(){
         let that = this
-        axios.get("/dashboard/index", {})
+        axios.get('/dashboard/index', {})
           .then(function (response) {
             console.log(response)
 
