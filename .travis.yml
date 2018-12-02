@@ -1,7 +1,11 @@
 language: go
 go:
   - 1.9.x
+node_js:
+  - "iojs"
+  - "8"
 
+cache: npm
 install: true
 
 script:
