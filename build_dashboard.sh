@@ -10,4 +10,4 @@ cp bin /tmp/godfs
 mv conf /tmp/godfs
 mv /tmp/godfs/conf/storage.db /tmp/godfs/data
 cd ..
-npm run build
+npm install --save && npm run build
