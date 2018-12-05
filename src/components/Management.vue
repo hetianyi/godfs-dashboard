@@ -6,7 +6,7 @@
         <mdc-layout-grid style="width: 100%;">
           <mdc-layout-cell class="cell1" :span="12">
 
-            <mdc-fab icon="favorite" @click="openAddTrackerDialog=!openAddTrackerDialog" class="add-tracker-btn"></mdc-fab>
+            <mdc-fab icon="add" @click="openAddTrackerDialog=!openAddTrackerDialog" class="add-tracker-btn"></mdc-fab>
           </mdc-layout-cell>
         </mdc-layout-grid>
       </mdc-card>
@@ -19,7 +19,7 @@
         <mdc-layout-grid style="width: 100%;">
           <mdc-layout-cell class="cell1" :span="12">
 
-            <mdc-fab icon="favorite" @click="openAddTrackerDialog=!openAddTrackerDialog" class="add-tracker-btn"></mdc-fab>
+            <mdc-fab icon="add" @click="openAddTrackerDialog=!openAddTrackerDialog" class="add-tracker-btn"></mdc-fab>
           </mdc-layout-cell>
         </mdc-layout-grid>
       </mdc-card>
@@ -63,7 +63,7 @@
 
         newTrackerEnableState: "Enabled",
         newTrackerHost: "",
-        newTrackerPort: "1024",
+        newTrackerPort: "1022",
         newTrackerSecret: "",
         newTrackerRemark: "",
         isThisNotAcceptable: false,

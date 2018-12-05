@@ -211,8 +211,8 @@
             that.upTime = response.data.result.up_time
             that.trackerCount = response.data.result.tracker
             that.storageCount = response.data.result.storage
-            that.networkIOin = response.data.result.ioin
-            that.networkIOout = response.data.result.ioout
+            that.networkIOin = that.humanReadable(response.data.result.ioin)
+            that.networkIOout = that.humanReadable(response.data.result.ioout)
             that.downloadCount = response.data.result.downloads
             that.uploadCount = response.data.result.uploads
             that.fileCount = response.data.result.files
@@ -246,7 +246,27 @@
           .catch(function (error) {
             console.log(error)
           })
+      },
+
+      humanReadable(len) {
+        if (len < 1024) {
+          return len + 'B'
+        }
+        if (len < 1024*1024) {
+          return new Number(len/1024).toFixed(2) + 'KB'
+        }
+        if (len < 1024*1024*1024) {
+          return new Number(len/1024/1024).toFixed(2) + 'MB'
+        }
+        if (len < 1024*1024*1024*1024) {
+          return new Number(len/1024/1024/1024).toFixed(2) + 'GB'
+        }
+        if (len < 1024*1024*1024*1024*1024) {
+          return new Number(len/1024/1024/1024/1024).toFixed(2) + 'TB'
+        }
+        return new Number(len/1024/1024/1024/1024/1024).toFixed(2) + 'PB'
       }
+
     }
   }
 </script>
